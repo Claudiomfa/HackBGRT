@@ -1,0 +1,53 @@
+
+name: Build HackBGRT RedPOISON
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "src/**"
+      - "Makefile"
+      - ".github/workflows/build.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout repository and submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang lld make mono-devel zip
+
+      - name: Build HackBGRT
+        run: make all
+
+      - name: Prepare package
+        run: |
+          mkdir -p package/HackBGRT/efi
+          cp setup.exe config.txt splash.bmp package/HackBGRT/
+          cp -a shim-signed package/HackBGRT/
+          cp -a efi package/HackBGRT/
+
+      - name: Create ZIP
+        run: |
+          cd package
+          zip -r HackBGRT-RedPOISON-Cacau.zip HackBGRT
+
+      - name: Upload installer package
+        uses: actions/upload-artifact@v4
+        with:
+          name: HackBGRT-RedPOISON-Cacau
+          path: package/HackBGRT-RedPOISON-Cacau.zip
+          if-no-files-found: error
