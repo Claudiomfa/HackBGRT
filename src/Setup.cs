@@ -470,7 +470,7 @@ public class Setup {
 		}
 		try {
 			var re = new Regex("[{][0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}[}]");
-			var bcdCopy = Execute("bcdedit", "/copy {bootmgr} /d HackBGRT").Output;
+			var bcdCopy = Execute("bcdedit", "/copy {bootmgr} /d \"RedPOISON Cacau\"").Output;
 			if (bcdCopy == null) {
 				throw new SetupException("Failed to create a new BCDEdit entry for HackBGRT!");
 			}
