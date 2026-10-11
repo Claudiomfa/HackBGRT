@@ -31,7 +31,7 @@ jobs:
           sudo apt-get install -y clang lld make mono-devel zip
 
       - name: Build HackBGRT
-        run: make all
+        run: make all GIT_DESCRIBE=v2.6.0
 
       - name: Prepare package
         run: |
